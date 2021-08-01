@@ -48,10 +48,15 @@ APIJSON 是一个很有趣的框架，但是官方文档分散在各处（README
 ### 必备参考链接
 
 设计规范：https://github.com/Tencent/APIJSON/blob/master/Document.md#3
+
 提问前必看：https://github.com/Tencent/APIJSON/issues/36
+
 实现原理：https://github.com/Tencent/APIJSON/wiki#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86
+
 「详细的说明文档」：https://github.com/Tencent/APIJSON/blob/master/%E8%AF%A6%E7%BB%86%E7%9A%84%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md
+
 文档网站：https://vincentcheng.github.io/apijson-doc/zh/newinterface.html#%E5%90%8E%E5%8F%B0%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE%E8%A1%A8
+
 路线图：https://github.com/Tencent/APIJSON/blob/3c9084479876748055ebe048d388098ef05c3e23/Roadmap.md
 
 QQ 技术群： 734652054（新）、607020115（旧）
@@ -347,7 +352,7 @@ JSONObject response = new APIJSONParser(GET, false).parseResponse(todoRequest);
 
 拿到结果后就可以反序列化成对象，进行判断了。
 
-```json
+```java
 JSONResponse todoResponse = new JSONResponse(response);
 Todo todo = todoResponse.getObject(Todo.class);
 User user = todoResponse.getObject(User.class);
