@@ -24,7 +24,7 @@ APIJSON 是一个很有趣的框架，但是官方文档分散在各处（README
 
 3. 用 IDEA 打开项目，进入 pom.xml ，右键 Maven - Reload
 
-   > 如果遇到了 Maven 报错提示找不到 APIJSON 包，请参考「杂项」一节中「Maven 报错无法找到 APIJSON 包」
+   > 如果遇到了 Maven 报错提示找不到 APIJSON 包，请参考「杂项」一节中[「Maven 报错无法找到 APIJSON 包」]([apijson_todo_demo/FULLTEXT.md at master · jerrylususu/apijson_todo_demo (github.com)](https://github.com/jerrylususu/apijson_todo_demo/blob/master/FULLTEXT.md#maven-报错无法找到-apijson-包))
 
 4. 进入 apijson/demo/config/DemoSQLConfig.java 修改数据库配置，包括数据库类型，默认 schema 名，数据库版本号，JDBC 连接字符串，数据库用户名和密码
 
@@ -492,7 +492,7 @@ public class JSONWebConfig extends WebMvcConfigurerAdapter {
 
 ### Maven 报错无法找到 APIJSON 包
 
-这一问题的核心原因，似乎是 APIJSON 已经从自己在 Maven 上发行包，转换到了使用 jitpack.io 的服务自动从 Github 拉去最新版本打包。如果遇到此问题，请升级 IDEA 和 Maven 至最新版本，并勾选 IDEA 中 Maven 配置页的「Use plugin registry」和「Always update snapshots」后，重启 IDEA 再试。
+这一问题的核心原因，似乎是 APIJSON 已经从自己在 Maven 上发行包，转换到了使用 jitpack.io 的服务自动从 Github 拉取最新版本打包。如果遇到此问题，请升级 IDEA 和 Maven 至最新版本，并勾选 IDEA 中 Maven 配置页的「Use plugin registry」和「Always update snapshots」后，重启 IDEA 再试。
 
 作者在 IDEA 2021.1, Maven 3.6.1 下遇到了此问题，更新至 IDEA 2022.1, Maven 3.8.6 后问题解决。
 
