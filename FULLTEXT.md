@@ -1,12 +1,12 @@
 # APIJSON Todo Demo
 
-一个尝试让 APIJSON 上手更简单一些的尝试。
+一个试图让 APIJSON 上手更简单一些的尝试。
 
 本示例项目是一个基于 APIJSON 实现的 todo 系统，在官方示例项目（APIJSON-Demo）的基础上进一步简化了数据库和代码，完整实现了对一个业务表的单独/批量 CRUD 操作，并描述了如何用远程函数实现一个简单的自定义鉴权逻辑。
 
+:warning: 本项目文本最后更新于 2021 年 8 月（APIJSON 版本 4.7.2），后续维护只是跟随官方更新版本号，文中的文字描述和技术原理可能已经发生变更。如果在阅读时注意到不一致之处，欢迎提出 issue 和 pull request，我会在力所能及的范围内尽量修复。
 
-
-注意：部分内容为个人猜测，不保证正确性，如有错漏，还请指正！
+:warning: 部分内容为个人猜测，不保证正确性，如有错漏，还请指正！
 
 ## 引言
 
@@ -19,10 +19,17 @@ APIJSON 是一个很有趣的框架，但是官方文档分散在各处（README
 ## 初始化这个项目
 
 1. 把整个项目 clone 到本地
+
 2. 用根目录下的 initdb_final.sql 初始化数据库
+
 3. 用 IDEA 打开项目，进入 pom.xml ，右键 Maven - Reload
+
+   > 如果遇到了 Maven 报错提示找不到 APIJSON 包，请参考「杂项」一节中「Maven 报错无法找到 APIJSON 包」
+
 4. 进入 apijson/demo/config/DemoSQLConfig.java 修改数据库配置，包括数据库类型，默认 schema 名，数据库版本号，JDBC 连接字符串，数据库用户名和密码
+
 5. （推荐）打开 Postman，导入根目录下的 demo.postman_collection.json，其中含有一些预先准备好的请求
+
 6. 进入 DemoApplication，右键 Run 'DemoApplication'
 
 
@@ -483,3 +490,10 @@ public class JSONWebConfig extends WebMvcConfigurerAdapter {
 }
 ```
 
+### Maven 报错无法找到 APIJSON 包
+
+这一问题的核心原因，似乎是 APIJSON 已经从自己在 Maven 上发行包，转换到了使用 jitpack.io 的服务自动从 Github 拉去最新版本打包。如果遇到此问题，请升级 IDEA 和 Maven 至最新版本，并勾选 IDEA 中 Maven 配置页的「Use plugin registry」和「Always update snapshots」后，重启 IDEA 再试。
+
+作者在 IDEA 2021.1, Maven 3.6.1 下遇到了此问题，更新至 IDEA 2022.1, Maven 3.8.6 后问题解决。
+
+相关 issue：[maven 阿里云镜像站无法找到 com.github.Tencent APIJSON · Issue #11 · APIJSON/APIJSON-Demo](https://github.com/APIJSON/APIJSON-Demo/issues/11)

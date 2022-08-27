@@ -84,6 +84,7 @@ DROP TABLE IF EXISTS `Function`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Function` (
   `id` bigint(15) NOT NULL AUTO_INCREMENT,
+  `debug` tinyint(2) NOT NULL DEFAULT 0 COMMENT '是否为 DEBUG 调试数据，只允许在开发环境使用，测试和线上环境禁用：0-否，1-是。',
   `userId` bigint(15) NOT NULL COMMENT '管理员用户Id',
   `name` varchar(50) NOT NULL COMMENT '方法名',
   `arguments` varchar(100) DEFAULT NULL COMMENT '参数列表，每个参数的类型都是 String。\n用 , 分割的字符串 比 [JSONArray] 更好，例如 array,item ，更直观，还方便拼接函数。',
@@ -105,7 +106,7 @@ CREATE TABLE `Function` (
 
 LOCK TABLES `Function` WRITE;
 /*!40000 ALTER TABLE `Function` DISABLE KEYS */;
-INSERT INTO `Function` VALUES (1,0,'sayHello','name','{\"name\": \"test\"}','最简单的远程函数','Object',0,NULL,NULL,'2021-07-28 12:04:27',NULL),(2,0,'isUserCanPutTodo','todoId','{\"todoId\": 123}','用来判定todo的写权限。','Object',0,NULL,NULL,'2021-07-28 12:04:27',NULL),(3,0,'getNoteCountAPI','','{}','计数当前登录用户的todo数，展示如何在远程函数内部操作db','Object',0,NULL,NULL,'2021-07-28 12:04:27',NULL),(4,0,'rawSQLAPI','id','{\"id\": \"_DOCUMENT_ONLY_\"}','展示如何用裸SQL操作','Object',0,NULL,NULL,'2021-07-28 12:04:27',NULL),(10,0,'countArray','array','{\"array\": [1, 2, 3]}','（框架启动自检需要）获取数组长度。没写调用键值对，会自动补全 \"result()\": \"countArray(array)\"','Object',0,NULL,NULL,'2018-10-13 08:23:23',NULL),(11,0,'isContain','array,value','{\"array\": [1, 2, 3], \"value\": 2}','（框架启动自检需要）判断是否数组包含值。','Object',0,NULL,NULL,'2018-10-13 08:23:23',NULL),(12,0,'getFromArray','array,position','{\"array\": [1, 2, 3], \"result()\": \"getFromArray(array,1)\"}','（框架启动自检需要）根据下标获取数组里的值。position 传数字时直接作为值，而不是从所在对象 request 中取值','Object',0,NULL,NULL,'2018-10-13 08:30:31',NULL),(13,0,'getFromObject','object,key','{\"key\": \"id\", \"object\": {\"id\": 1}}','（框架启动自检需要）根据键获取对象里的值。','Object',0,NULL,NULL,'2018-10-13 08:30:31',NULL);
+INSERT INTO `Function` VALUES (1,0,0,'sayHello','name','{\"name\": \"test\"}','最简单的远程函数','Object',0,NULL,NULL,'2021-07-28 12:04:27',NULL),(2,0,0,'isUserCanPutTodo','todoId','{\"todoId\": 123}','用来判定todo的写权限。','Object',0,NULL,NULL,'2021-07-28 12:04:27',NULL),(3,0,0,'getNoteCountAPI','','{}','计数当前登录用户的todo数，展示如何在远程函数内部操作db','Object',0,NULL,NULL,'2021-07-28 12:04:27',NULL),(4,0,0,'rawSQLAPI','id','{\"id\": \"_DOCUMENT_ONLY_\"}','展示如何用裸SQL操作','Object',0,NULL,NULL,'2021-07-28 12:04:27',NULL),(10,0,0,'countArray','array','{\"array\": [1, 2, 3]}','（框架启动自检需要）获取数组长度。没写调用键值对，会自动补全 \"result()\": \"countArray(array)\"','Object',0,NULL,NULL,'2018-10-13 08:23:23',NULL),(11,0,0,'isContain','array,value','{\"array\": [1, 2, 3], \"value\": 2}','（框架启动自检需要）判断是否数组包含值。','Object',0,NULL,NULL,'2018-10-13 08:23:23',NULL),(12,0,0,'getFromArray','array,position','{\"array\": [1, 2, 3], \"result()\": \"getFromArray(array,1)\"}','（框架启动自检需要）根据下标获取数组里的值。position 传数字时直接作为值，而不是从所在对象 request 中取值','Object',0,NULL,NULL,'2018-10-13 08:30:31',NULL),(13,0,0,'getFromObject','object,key','{\"key\": \"id\", \"object\": {\"id\": 1}}','（框架启动自检需要）根据键获取对象里的值。','Object',0,NULL,NULL,'2018-10-13 08:30:31',NULL);
 /*!40000 ALTER TABLE `Function` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -118,6 +119,7 @@ DROP TABLE IF EXISTS `Request`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Request` (
   `id` bigint(15) NOT NULL COMMENT '唯一标识',
+  `debug` tinyint(2) NOT NULL DEFAULT 0 COMMENT '是否为 DEBUG 调试数据，只允许在开发环境使用，测试和线上环境禁用：0-否，1-是。',
   `version` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'GET,HEAD可用任意结构访问任意开放内容，不需要这个字段。\n其它的操作因为写入了结构和内容，所以都需要，按照不同的version选择对应的structure。\n\n自动化版本管理：\nRequest JSON最外层可以传  “version”:Integer 。\n1.未传或 <= 0，用最新版。 “@order”:”version-“\n2.已传且 > 0，用version以上的可用版本的最低版本。 “@order”:”version+”, “version{}”:”>={version}”',
   `method` varchar(10) DEFAULT 'GETS' COMMENT '只限于GET,HEAD外的操作方法。',
   `tag` varchar(20) NOT NULL COMMENT '标签',
@@ -134,7 +136,7 @@ CREATE TABLE `Request` (
 
 LOCK TABLES `Request` WRITE;
 /*!40000 ALTER TABLE `Request` DISABLE KEYS */;
-INSERT INTO `Request` VALUES (2,1,'POST','api_register','{\"User\": {\"MUST\": \"username,realname\", \"REFUSE\": \"id\", \"UNIQUE\": \"username\"}, \"Credential\": {\"MUST\": \"pwdHash\", \"UPDATE\": {\"id@\": \"User/id\"}}}','注意tag名小写开头，则不会被默认映射到表','2021-07-28 18:15:40'),(3,1,'PUT','User','{\"REFUSE\": \"username\", \"UPDATE\": {\"@role\": \"OWNER\"}}','user 修改自身数据','2021-07-29 12:49:20'),(4,1,'POST','Todo','{\"MUST\": \"title\", \"UPDATE\": {\"@role\": \"OWNER\"}, \"REFUSE\": \"id\"}','增加todo','2021-07-29 13:18:50'),(5,1,'PUT','Todo','{\"Todo\":{ \"MUST\":\"id\",\"REFUSE\": \"userId\", \"UPDATE\": {\"checkCanPut-()\": \"isUserCanPutTodo(id)\"}} }','修改todo','2021-07-29 14:05:57'),(6,1,'DELETE','Todo','{\"MUST\": \"id\", \"REFUSE\": \"!\", \"INSERT\": {\"@role\": \"OWNER\"}}','删除todo','2021-07-29 14:10:32'),(8,1,'PUT','helper+','{\"Todo\": {\"MUST\": \"id,helper+\", \"INSERT\": {\"@role\": \"OWNER\"}}}','增加todo helper','2021-07-29 21:46:34'),(9,1,'PUT','helper-','{\"Todo\": {\"MUST\": \"id,helper-\", \"INSERT\": {\"@role\": \"OWNER\"}}}','删除todo helper','2021-07-29 21:46:34'),(10,1,'POST','Todo:[]','{\"Todo[]\": [{\"MUST\": \"title\", \"REFUSE\": \"id\"}], \"UPDATE\": {\"@role\": \"OWNER\"}}','批量增加todo','2021-08-01 04:51:31'),(11,1,'PUT','Todo:[]','{\"Todo[]\":[{ \"MUST\":\"id\",\"REFUSE\": \"userId\", \"UPDATE\": {\"checkCanPut-()\": \"isUserCanPutTodo(id)\"}}] }','每项单独设置（现在不生效）','2021-08-01 04:51:31'),(12,1,'PUT','Todo[]','{\"Todo\":{ \"MUST\":\"id{}\",\"REFUSE\": \"userId\", \"UPDATE\": {\"checkCanPut-()\": \"isUserCanPutTodo(id)\"}} }','指定全部改（现在不生效）','2021-08-01 04:51:31');
+INSERT INTO `Request` VALUES (2,0,1,'POST','api_register','{\"User\": {\"MUST\": \"username,realname\", \"REFUSE\": \"id\", \"UNIQUE\": \"username\"}, \"Credential\": {\"MUST\": \"pwdHash\", \"UPDATE\": {\"id@\": \"User/id\"}}}','注意tag名小写开头，则不会被默认映射到表','2021-07-28 18:15:40'),(3,0,1,'PUT','User','{\"REFUSE\": \"username\", \"UPDATE\": {\"@role\": \"OWNER\"}}','user 修改自身数据','2021-07-29 12:49:20'),(4,0,1,'POST','Todo','{\"MUST\": \"title\", \"UPDATE\": {\"@role\": \"OWNER\"}, \"REFUSE\": \"id\"}','增加todo','2021-07-29 13:18:50'),(5,0,1,'PUT','Todo','{\"Todo\":{ \"MUST\":\"id\",\"REFUSE\": \"userId\", \"UPDATE\": {\"checkCanPut-()\": \"isUserCanPutTodo(id)\"}} }','修改todo','2021-07-29 14:05:57'),(6,0,1,'DELETE','Todo','{\"MUST\": \"id\", \"REFUSE\": \"!\", \"INSERT\": {\"@role\": \"OWNER\"}}','删除todo','2021-07-29 14:10:32'),(8,0,1,'PUT','helper+','{\"Todo\": {\"MUST\": \"id,helper+\", \"INSERT\": {\"@role\": \"OWNER\"}}}','增加todo helper','2021-07-29 21:46:34'),(9,0,1,'PUT','helper-','{\"Todo\": {\"MUST\": \"id,helper-\", \"INSERT\": {\"@role\": \"OWNER\"}}}','删除todo helper','2021-07-29 21:46:34'),(10,0,1,'POST','Todo:[]','{\"Todo[]\": [{\"MUST\": \"title\", \"REFUSE\": \"id\"}], \"UPDATE\": {\"@role\": \"OWNER\"}}','批量增加todo','2021-08-01 04:51:31'),(11,0,1,'PUT','Todo:[]','{\"Todo[]\":[{ \"MUST\":\"id\",\"REFUSE\": \"userId\", \"UPDATE\": {\"checkCanPut-()\": \"isUserCanPutTodo(id)\"}}] }','每项单独设置（现在不生效）','2021-08-01 04:51:31'),(12,0,1,'PUT','Todo[]','{\"Todo\":{ \"MUST\":\"id{}\",\"REFUSE\": \"userId\", \"UPDATE\": {\"checkCanPut-()\": \"isUserCanPutTodo(id)\"}} }','指定全部改（现在不生效）','2021-08-01 04:51:31'),(13,0,1,'DELETE','Todo[]','{\"Todo\": {\"MUST\": \"id{}\", \"REFUSE\": \"!\", \"INSERT\": {\"@role\": \"OWNER\"}}}','删除todo','2021-08-01 10:35:15');
 /*!40000 ALTER TABLE `Request` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -161,7 +163,7 @@ CREATE TABLE `Todo` (
 
 LOCK TABLES `Todo` WRITE;
 /*!40000 ALTER TABLE `Todo` DISABLE KEYS */;
-INSERT INTO `Todo` VALUES (1627761460691,1627761019072,'new todo','some content here...','2021-07-31 19:57:40',NULL),(1627761702477,1627761019072,'yet another todo','good helper','2021-07-31 20:01:42',NULL),(1627761711192,1627761019072,'yet another todo','good helper','2021-07-31 20:01:51','[1627761504126]'),(1627794007156,1627761019072,'edit put multi','good 1','2021-08-01 05:00:07',NULL),(1627794007173,1627761019072,'edit put multi','good 1','2021-08-01 05:00:07',NULL),(1627794043682,1627761019072,'multi post a1','','2021-08-01 05:00:44',NULL),(1627794043692,1627761019072,'multi post a2','','2021-08-01 05:00:44',NULL),(1627794109043,1627761019072,'hithere','','2021-08-01 05:01:49',NULL),(1627794109050,1627761019072,'multi post a2','','2021-08-01 05:01:49',NULL);
+INSERT INTO `Todo` VALUES (1627761460691,1627761019072,'new todo','some content here...','2021-07-31 19:57:40',NULL),(1627761702477,1627761019072,'yet another todo','good helper','2021-07-31 20:01:42',NULL),(1627761711192,1627761019072,'yet another todo','good helper','2021-07-31 20:01:51','[1627761504126]'),(1627794007156,1627761019072,'edit put multi','good 1','2021-08-01 05:00:07',NULL),(1627794007173,1627761019072,'edit put multi','good 1','2021-08-01 05:00:07',NULL),(1627794043682,1627761019072,'multi post a1','','2021-08-01 05:00:44',NULL),(1627794043692,1627761019072,'multi post a2','','2021-08-01 05:00:44',NULL);
 /*!40000 ALTER TABLE `Todo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -202,4 +204,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-08-01 15:10:03
+-- Dump completed on 2022-08-27 16:54:39

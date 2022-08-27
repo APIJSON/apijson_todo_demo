@@ -14,6 +14,7 @@ limitations under the License.*/
 
 package apijson.demo;
 
+import apijson.Log;
 import apijson.demo.config.DemoSQLConfig;
 import apijson.demo.config.DemoFunctionParser;
 import apijson.orm.FunctionParser;

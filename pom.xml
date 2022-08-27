@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>apijson.demo</groupId>
 	<artifactId>apijson-demo</artifactId>
-	<version>4.7.0</version>
-	<packaging>jar</packaging>
+	<version>5.2.0</version>
 
 	<name>APIJSONDemo</name>
 	<description>Demo project for Testing APIJSON Server based on SpringBoot</description>
@@ -18,28 +17,30 @@
 	</properties>
 
 	<dependencies>
+		<!-- JDK 11+ 需要，否则启动报错 NoClassDefFoundError: javax/activation/UnsupportedDataTypeException -->
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>activation</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
 		<!-- 需要的 APIJSON 相关依赖 -->
 		<dependency>
 			<groupId>com.github.APIJSON</groupId>
 			<artifactId>apijson-framework</artifactId>
-			<version>LATEST</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.Tencent</groupId>
-			<artifactId>APIJSON</artifactId>
-			<version>LATEST</version>
+			<version>5.2.0</version>
 		</dependency>
 
 		<!-- 需要用的数据库 JDBC 驱动 -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.22</version>
+			<version>8.0.29</version>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.2.18</version>
+			<version>42.3.4</version>
 		</dependency>
 		<!-- Oracle, SQLServer 等其它数据库的 JDBC 驱动，可以在这里加上 Maven 依赖或 libs 目录放 Jar 包并依赖 -->
 
@@ -47,7 +48,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-			<version>2.4.2</version>
+			<version>2.5.13</version>
 		</dependency>
 
 	</dependencies>
@@ -81,6 +82,15 @@
 	</build>
 
 	<repositories>
+		<!-- APIJSON 必须用到的托管平台 -->
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+
 		<repository>
 			<id>spring-snapshots</id>
 			<url>https://repo.spring.io/snapshot</url>
@@ -91,10 +101,6 @@
 		<repository>
 			<id>spring-milestones</id>
 			<url>https://repo.spring.io/milestone</url>
-		</repository>
-		<repository>
-			<id>jitpack.io</id>
-			<url>https://jitpack.io</url>
 		</repository>
 	</repositories>
 
