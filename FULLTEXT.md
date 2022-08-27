@@ -24,7 +24,7 @@ APIJSON 是一个很有趣的框架，但是官方文档分散在各处（README
 
 3. 用 IDEA 打开项目，进入 pom.xml ，右键 Maven - Reload
 
-   > 如果遇到了 Maven 报错提示找不到 APIJSON 包，请参考「杂项」一节中[「Maven 报错无法找到 APIJSON 包」]([apijson_todo_demo/FULLTEXT.md at master · jerrylususu/apijson_todo_demo (github.com)](https://github.com/jerrylususu/apijson_todo_demo/blob/master/FULLTEXT.md#maven-报错无法找到-apijson-包))
+   > 如果遇到了 Maven 报错提示找不到 APIJSON 包，请参考「杂项」一节中[「Maven 报错无法找到 APIJSON 包」](https://github.com/jerrylususu/apijson_todo_demo/blob/master/FULLTEXT.md#maven-报错无法找到-apijson-包)
 
 4. 进入 apijson/demo/config/DemoSQLConfig.java 修改数据库配置，包括数据库类型，默认 schema 名，数据库版本号，JDBC 连接字符串，数据库用户名和密码
 
